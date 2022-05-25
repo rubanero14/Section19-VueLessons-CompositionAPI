@@ -1,52 +1,72 @@
 <template>
   <section class="container">
-    <h3>{{ age }}</h3>
-    <h4>{{ user }}</h4>
+    <user-data :first-name="firstName" :last-name="lastName" :age="age"></user-data>
     <button @click="addAge">Change age</button>
     <div>
       <input type="text" placeholder="First Name" v-model="firstName"/>
-      <input type="text" placeholder="Last Name" v-model="lastName"/>
+      <input type="text" placeholder="Last Name" ref="lastNameInput"/>
+      <button @click="setLastName">Set Last Name</button>
     </div>
   </section>
 </template>
 
-<script setup>
+<script>
+import UserData from './components/UserData.vue';
 import { ref,computed, watch } from 'vue';
+export default {
+  components: { UserData },
+  setup(){
+    // const user = ref('Raj');
+    const age = ref(35);
+    const firstName = ref('');
+    const lastName = ref('');
+    const lastNameInput = ref(null);
 
-// const user = ref('Raj');
-const age = ref(35);
-const firstName = ref('');
-const lastName = ref('');
+    const user = computed(function(){
+      return firstName.value + ' ' + lastName.value;
+    });
 
-const user = computed(function(){
-  return firstName.value + ' ' + lastName.value;
-});
+    watch([age, user], function(newValues, oldValues){
+      console.log('Old age value: '+ oldValues[0]);
+      console.log('New age value: '+ newValues[0]);
+      console.log('Old name value: '+ oldValues[1]);
+      console.log('New name value: '+ newValues[1]);
+    });
 
-watch([age, user], function(newValues, oldValues){
-  console.log('Old age value: '+ oldValues[0]);
-  console.log('New age value: '+ newValues[0]);
-  console.log('Old name value: '+ oldValues[1]);
-  console.log('New name value: '+ newValues[1]);
-});
+    // const user = reactive({
+    //   name: 'Raj',
+    //   age: 35,
+    // });
 
-// const user = reactive({
-//   name: 'Raj',
-//   age: 35,
-// });
+    function addAge(){
+      return age.value += 10;
+    }
 
-function addAge(){
-  return age.value += 10;
+    function setLastName(event){
+      return lastName.value = lastNameInput.value.value;
+    }
+
+    // setTimeout(
+    //   function(){
+    //     let names = ['Sharm', 'Akshu'];
+    //     let ages = [34,3];
+    //     const Rand = Math.round(Math.random())
+    //     user.name = names[Rand];
+    //     user.age = ages[Rand];
+    //   }
+    // , 2000)
+    return {
+      user,
+      age,
+      addAge,
+      firstName,
+      lastName,
+      lastNameInput,
+      setLastName,
+    };
+  },
 }
 
-// setTimeout(
-//   function(){
-//     let names = ['Sharm', 'Akshu'];
-//     let ages = [34,3];
-//     const Rand = Math.round(Math.random())
-//     user.name = names[Rand];
-//     user.age = ages[Rand];
-//   }
-// , 2000)
 </script>
 
 <style>
