@@ -1,10 +1,13 @@
 <template>
   <section class="container">
-    <user-data :first-name="firstName" :last-name="lastName" :age="age"></user-data>
+    <user-data
+      :first-name="firstName"
+      :last-name="lastName"
+    ></user-data>
     <button @click="addAge">Change age</button>
     <div>
-      <input type="text" placeholder="First Name" v-model="firstName"/>
-      <input type="text" placeholder="Last Name" ref="lastNameInput"/>
+      <input type="text" placeholder="First Name" v-model="firstName" />
+      <input type="text" placeholder="Last Name" ref="lastNameInput" />
       <button @click="setLastName">Set Last Name</button>
     </div>
   </section>
@@ -12,25 +15,28 @@
 
 <script>
 import UserData from './components/UserData.vue';
-import { ref,computed, watch } from 'vue';
+import { ref, computed, watch, provide } from 'vue';
+
 export default {
   components: { UserData },
-  setup(){
+  setup() {
     // const user = ref('Raj');
     const age = ref(35);
     const firstName = ref('');
     const lastName = ref('');
     const lastNameInput = ref(null);
 
-    const user = computed(function(){
+    provide('userAge', age);
+
+    const user = computed(function () {
       return firstName.value + ' ' + lastName.value;
     });
 
-    watch([age, user], function(newValues, oldValues){
-      console.log('Old age value: '+ oldValues[0]);
-      console.log('New age value: '+ newValues[0]);
-      console.log('Old name value: '+ oldValues[1]);
-      console.log('New name value: '+ newValues[1]);
+    watch([age, user], function (newValues, oldValues) {
+      console.log('Old age value: ' + oldValues[0]);
+      console.log('New age value: ' + newValues[0]);
+      console.log('Old name value: ' + oldValues[1]);
+      console.log('New name value: ' + newValues[1]);
     });
 
     // const user = reactive({
@@ -38,12 +44,12 @@ export default {
     //   age: 35,
     // });
 
-    function addAge(){
-      return age.value += 10;
+    function addAge() {
+      return (age.value += 10);
     }
 
-    function setLastName(event){
-      return lastName.value = lastNameInput.value.value;
+    function setLastName() {
+      return (lastName.value = lastNameInput.value.value);
     }
 
     // setTimeout(
@@ -65,8 +71,7 @@ export default {
       setLastName,
     };
   },
-}
-
+};
 </script>
 
 <style>
